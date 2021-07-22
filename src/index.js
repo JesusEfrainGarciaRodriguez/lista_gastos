@@ -10,7 +10,6 @@ import {Helmet} from "react-helmet";
 
 // Elementos
 import Contenedor from './elementos/Contenedor';
-import Fondo from './elementos/Fondo';
 
 // Componentes
 import EditarGasto from './componentes/EditarGasto';
@@ -48,8 +47,6 @@ const Index = () => {
           </Switch>
         </Contenedor>
       </BrowserRouter>
-
-      <Fondo/>
     </>
   );
 }

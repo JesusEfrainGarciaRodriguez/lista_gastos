@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const Contenedor = styled.div`
     /* background: #fff; */
-    background: rgba( 255, 255, 255, 0.15 );
+    background: rgba( 255, 255, 255, 0.4 );
     width: 90%;
     max-width: 90rem; /*1110px*/
     height: 90vh;

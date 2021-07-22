@@ -9,7 +9,8 @@
 }
 
 body {
-  background: #F9F9F9;
+  background-image: url('./img/triangle-mosaic.png');
+  background-repeat: repeat;
   min-height: 100vh;
   display: flex;
   align-items: center;
