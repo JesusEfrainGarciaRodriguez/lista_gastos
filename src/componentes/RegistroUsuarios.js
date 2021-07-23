@@ -35,9 +35,9 @@ const RegistroUsuarios = () => {
             case 'password':
                 setPassword(e.target.value);
                 break;
-                case 'password2':
-                    setPassword2(e.target.value);
-                    break;
+            case 'password2':
+                setPassword2(e.target.value);
+                break;
             default:
                 break;
         }
