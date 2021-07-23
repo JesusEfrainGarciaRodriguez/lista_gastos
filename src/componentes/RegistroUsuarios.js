@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
+import { auth } from '../firebase/firebaseConfig';
+import { useHistory } from 'react-router';
 
-// Componenetes
+// Componentes
 import { Header, Titulo, ContenedorHeader } from './../elementos/Header';
 import {Formulario, Input, ContenedorBoton} from './../elementos/ElementosDeFormulario';
 import Boton from '../elementos/Boton';
@@ -17,6 +19,66 @@ const Svg = styled(SvgLogin)`
 `;
 
 const RegistroUsuarios = () => {
+    const history = useHistory();
+    const [correo, setCorreo] = useState("");
+    const [password, setPassword] = useState("");
+    const [password2, setPassword2] = useState("");
+
+    const handleChange = (e) => {
+        switch(e.target.name){
+            case 'email':
+                setCorreo(e.target.value);
+                break;
+            case 'password':
+                setPassword(e.target.value);
+                break;
+                case 'password2':
+                    setPassword2(e.target.value);
+                    break;
+            default:
+                break;
+        }
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // Valdación del formulario
+        const expresionRegular = /[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+/;
+        if( !expresionRegular.test(correo) ) return console.log("ingresar correo valido");
+
+        if( correo === '' || password === '' || password2 ==='' ) return console.log("Rellena todos los datos");
+
+        if( password !== password2 ) return console.log("Las Contraseñas no son iguales");
+        
+        // Registrar usuario en firebase
+        try {
+            await auth.createUserWithEmailAndPassword(correo, password);
+            history.push('/');
+        }
+        catch (error) {
+            let mensaje;
+            switch(error.code) {
+                case 'auth/invalid-password':
+                    mensaje = 'La contraseña tiene que ser de al menos 6 caracteres.';
+                    break;
+                case 'auth/weak-password':
+                    mensaje = 'La contraseña tiene que ser de al menos 6 caracteres.';
+                    break;
+                case 'auth/email-already-in-use':
+                    mensaje = 'Ya existe una cuenta con el correo electrónico proporcionado.';
+                    break;
+                case 'auth/invalid-email':
+                    mensaje = 'El correo electrónico no es válido.';
+                    break;
+                default:
+                    mensaje = 'Hubo un error al intentar crear la cuenta.';
+                    break;
+            }
+            console.log(mensaje);
+        }
+    }
+
     return (
         <>
 
@@ -33,22 +95,28 @@ const RegistroUsuarios = () => {
                 </ContenedorHeader>
             </Header>
 
-            <Formulario>
+            <Formulario onSubmit={handleSubmit}>
                 <Svg/>
                 <Input 
                     type="email" 
                     name="email" 
                     placeholder="Correo Electrónico" 
+                    value={correo}
+                    onChange={handleChange}
                 />
                 <Input 
                     type="password" 
                     name="password" 
                     placeholder="Contraseña" 
+                    value={password}
+                    onChange={handleChange}
                 />
                 <Input 
                     type="password" 
                     name="password2" 
-                    placeholder="Repetir la Contraseña" 
+                    placeholder="Repetir Contraseña" 
+                    value={password2}
+                    onChange={handleChange}
                 />
                 <ContenedorBoton>
                     <Boton as="button" type="submit" primario>Crear Cuenta</Boton>
