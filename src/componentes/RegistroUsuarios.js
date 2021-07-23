@@ -8,6 +8,7 @@ import { useHistory } from 'react-router';
 import { Header, Titulo, ContenedorHeader } from './../elementos/Header';
 import {Formulario, Input, ContenedorBoton} from './../elementos/ElementosDeFormulario';
 import Boton from '../elementos/Boton';
+import Alerta from '../elementos/Alerta';
 
 // Imagenes
 import {ReactComponent as SvgLogin} from './../img/registro.svg';
@@ -23,6 +24,8 @@ const RegistroUsuarios = () => {
     const [correo, setCorreo] = useState("");
     const [password, setPassword] = useState("");
     const [password2, setPassword2] = useState("");
+    const [estadoAlerta, setEstadoAlerta] = useState(false);
+    const [alerta, setAlerta] = useState({});
 
     const handleChange = (e) => {
         switch(e.target.name){
@@ -42,14 +45,37 @@ const RegistroUsuarios = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setEstadoAlerta(false);
+        setAlerta({});
 
         // Valdación del formulario
         const expresionRegular = /[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+/;
-        if( !expresionRegular.test(correo) ) return console.log("ingresar correo valido");
+        if( !expresionRegular.test(correo) ) {
+            setEstadoAlerta(true);
+            setAlerta({
+                tipo: 'error',
+                mensaje: 'Por favor ingresa un correo valido'
+            });
+            return;
+        }
 
-        if( correo === '' || password === '' || password2 ==='' ) return console.log("Rellena todos los datos");
+        if( correo === '' || password === '' || password2 ==='' ) {
+            setEstadoAlerta(true);
+            setAlerta({
+                tipo: 'error',
+                mensaje: 'Por favor rellena todos los datos'
+            });
+            return;
+        }
 
-        if( password !== password2 ) return console.log("Las Contraseñas no son iguales");
+        if( password !== password2 ) {
+            setEstadoAlerta(true);
+            setAlerta({
+                tipo: 'error',
+                mensaje: 'Las Contraseñas no son iguales'
+            });
+            return; 
+        }
         
         // Registrar usuario en firebase
         try {
@@ -75,7 +101,11 @@ const RegistroUsuarios = () => {
                     mensaje = 'Hubo un error al intentar crear la cuenta.';
                     break;
             }
-            console.log(mensaje);
+            setEstadoAlerta(true);
+            setAlerta({
+                tipo: 'error',
+                mensaje: mensaje
+            });
         }
     }
 
@@ -123,6 +153,12 @@ const RegistroUsuarios = () => {
                 </ContenedorBoton>
             </Formulario>
 
+            <Alerta
+                tipo={alerta.tipo}
+                mensaje={alerta.mensaje}
+                estadoAlerta={estadoAlerta}
+                cambiarEstadoAlerta={setEstadoAlerta}
+            />
         </>
     );
 }
