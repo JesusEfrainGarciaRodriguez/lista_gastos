@@ -8,6 +8,9 @@ import WebFont from 'webfontloader';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import {Helmet} from "react-helmet";
 
+// Contextos
+import { AuthProvider } from './contextos/AuthContext';
+
 // Elementos
 import Contenedor from './elementos/Contenedor';
 
@@ -17,6 +20,7 @@ import GastosPorCategoria from './componentes/GastosPorCategoria';
 import InicioSesion from './componentes/InicioSesion';
 import ListaDeGastos from './componentes/ListaDeGastos';
 import RegistroUsuarios from './componentes/RegistroUsuarios';
+import RutaPrivada from './componentes/RutaPrivada';
 
 // Img
 import favicon from './img/logo.png';
@@ -35,18 +39,21 @@ const Index = () => {
         <link rel="shortcut icon" href={favicon} type="image/x-icon"/>
       </Helmet>
 
-      <BrowserRouter>
-        <Contenedor>
-          <Switch>
-            <Route path="/iniciar-sesion" component={InicioSesion}/>
-            <Route path="/crear-cuenta" component={RegistroUsuarios}/>
-            <Route path="/categorias" component={GastosPorCategoria}/>
-            <Route path="/lista" component={ListaDeGastos}/>
-            <Route path="/editar/:id" component={EditarGasto}/>
-            <Route path="/" component={App}/>
-          </Switch>
-        </Contenedor>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <Contenedor>
+            <Switch>
+              <Route path="/iniciar-sesion" component={InicioSesion}/>
+              <Route path="/crear-cuenta" component={RegistroUsuarios}/>
+              <RutaPrivada path="/categorias"> <GastosPorCategoria /></RutaPrivada>
+              <RutaPrivada path="/lista"> <ListaDeGastos /> </RutaPrivada>
+              <RutaPrivada path="/editar/:id"> <EditarGasto /> </RutaPrivada>
+              <RutaPrivada path="/"> <App /> </RutaPrivada>
+            </Switch>
+          </Contenedor>
+        </BrowserRouter>
+      </AuthProvider>
+      
     </>
   );
 }
