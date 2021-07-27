@@ -1,6 +1,9 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 
+// Componenetes
+import FormularioGasto from './componentes/FormularioGasto';
+
 // Elementos
 import { Header, Titulo, ContenedorHeader, ContenedorBotones } from './elementos/Header';
 import Boton from './elementos/Boton';
@@ -24,6 +27,7 @@ const App = () => {
         </ContenedorHeader>
       </Header>
 
+      <FormularioGasto />
     </>
   );
 }
