@@ -1,7 +1,7 @@
 import { db } from './firebaseConfig';
 
 const agregarGasto = ({ descripcion, cantidad, categoria, fecha, uidUsuario }) => {
-    db.collection('gastos').add({
+    return db.collection('gastos').add({
         descripcion: descripcion,
         cantidad: cantidad,
         categoria: categoria,

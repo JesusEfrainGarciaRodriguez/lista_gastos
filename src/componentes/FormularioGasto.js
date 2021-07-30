@@ -5,6 +5,7 @@ import {ContenedorFiltros, Formulario, Input, InputGrande, ContenedorBoton} from
 import SelectCategorias from './SelectCategorias';
 import DatePicker from './DatePicker';
 import Boton from '../elementos/Boton';
+import Alerta from '../elementos/Alerta';
 
 // Img
 import { ReactComponent as IconoPlus } from '../img/plus.svg';
@@ -22,6 +23,8 @@ const FormularioGasto = () => {
     const [inputCantidad, setInputCantidad] = useState('');
     const [categoria, setCategoria] = useState('hogar');
     const [fecha, setFecha] = useState(new Date());
+    const [estadoAlerta, setEstadoAlerta] = useState(false);
+    const [alerta, setAlerta] = useState({});
     const { usuario } = useAuth();
 
     const HandleChange = (e) => {
@@ -38,15 +41,56 @@ const FormularioGasto = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        agregarGasto({
-            descripcion: inputDescripcion,
-            // Parse para tener 2 decimales
-            cantidad: parseFloat(inputCantidad).toFixed(2),
-            categoria: categoria,
-            // Transformar fecha a formato unix
-            fecha: getUnixTime(fecha),
-            uidUsuario: usuario.uid
-        });
+        // Transformamos la cantidad en numero y le pasamos 2 decimales
+        let cantidad = parseFloat(inputCantidad).toFixed(2);
+
+        // Comprobamos que haya una descripcion y valor
+        if(inputDescripcion !== '' && inputCantidad !== '') {
+            // Comprobamos que sea numero
+            if(cantidad) {
+                agregarGasto({
+                    descripcion: inputDescripcion,
+                    cantidad: cantidad,
+                    categoria: categoria,
+                    // Transformar fecha a formato unix
+                    fecha: getUnixTime(fecha),
+                    uidUsuario: usuario.uid
+                })
+                .then(() => {
+                    // Limpiar inputs
+                    setCategoria('hogar');
+                    setFecha(new Date());
+                    setInputDescripcion('');
+                    setInputCantidad('');
+                    setEstadoAlerta(true);
+                    setAlerta({
+                        tipo: 'exito',
+                        mensaje: 'El gasto fue agregado correctamente.'
+                    });
+                })
+                .catch((error) => {
+                    setEstadoAlerta(true);
+                    setAlerta({
+                        tipo: 'error',
+                        mensaje: 'Hubo un problema al intentar agregar el gasto.'
+                    });
+                });
+            }
+            else {
+                setEstadoAlerta(true);
+                setAlerta({
+                    tipo: 'error',
+                    mensaje: 'El valor que ingresaste no es correcto.'
+                });
+            }
+        }
+        else {
+            setEstadoAlerta(true);
+            setAlerta({
+                tipo: 'error',
+                mensaje: 'Por favor rellene todos los campos.'
+            });
+        }
     }
 
     return (
@@ -86,6 +130,13 @@ const FormularioGasto = () => {
                     <IconoPlus />
                 </Boton>
             </ContenedorBoton>
+
+            <Alerta 
+                tipo={alerta.tipo}
+                mensaje={alerta.mensaje}
+                estadoAlerta={estadoAlerta}
+                cambiarEstadoAlerta={setEstadoAlerta}
+            />
         </Formulario>
     );
 }
