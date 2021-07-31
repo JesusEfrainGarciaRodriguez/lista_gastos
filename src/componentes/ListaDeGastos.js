@@ -37,6 +37,9 @@ import convertirAMoneda from '../funciones/convertirAMoneda';
 import { ReactComponent as IconoEditar } from '../img/editar.svg';
 import { ReactComponent as IconoBorrar } from '../img/borrar.svg';
 
+// firebase
+import borrarGasto from '../firebase/borrarGasto';
+
 const ListaDeGastos = () => {
     const [gastos, obtenerMasGastos, hayMasPorCargar] = useObtenerGastos();
 
@@ -89,7 +92,7 @@ const ListaDeGastos = () => {
                                     <BotonAccion as={Link} to={`/editar/${gasto.id}`}>
                                         <IconoEditar />
                                     </BotonAccion>
-                                    <BotonAccion >
+                                    <BotonAccion onClick={() => borrarGasto(gasto.id)}>
                                         <IconoBorrar />
                                     </BotonAccion>
                                 </ContenedorBotones>

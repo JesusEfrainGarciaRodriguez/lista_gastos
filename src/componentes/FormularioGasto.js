@@ -116,7 +116,7 @@ const FormularioGasto = () => {
                     onChange={HandleChange}
                 />
                 <InputGrande 
-                    type="number"
+                    type="text"
                     name="cantidad"
                     id="cantidad"
                     placeholder="$0.00"
