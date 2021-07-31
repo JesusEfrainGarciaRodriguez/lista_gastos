@@ -2,6 +2,10 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 
+// date-fns
+import { fromUnixTime, format } from 'date-fns';
+import { es } from 'date-fns/locale';
+
 // Hook
 import useObtenerGastos from '../hooks/useObtenerGastos';
 
@@ -38,6 +42,19 @@ import { ReactComponent as IconoBorrar } from '../img/borrar.svg';
 const ListaDeGastos = () => {
     const gastos = useObtenerGastos();
 
+    const formatearFecha = (fecha) => {
+        return format(fromUnixTime(fecha), "dd 'de' MMMM 'de' yyyy", {locale: es});
+    }
+
+    const fechaEsIgual = (gastos, index, gasto) => {
+        if(index !== 0) {
+            const fechaActual = formatearFecha(gasto.fecha);
+            const fechaGastoAnterior = formatearFecha(gastos[index-1].fecha);
+
+            return fechaActual === fechaGastoAnterior ? true : false;
+        }
+    }
+
     return (
         <>
             <Helmet>
@@ -50,31 +67,35 @@ const ListaDeGastos = () => {
             </Header>
 
             <Lista>
-                {gastos.map((gasto) => {
+                {gastos.map((gasto, index) => {
                     return (
-                        <ElementoLista key={gasto.id}>
-                            <Categoria>
-                                <IconoCategoria id={gasto.categoria}/>
-                                {gasto.categoria}
-                            </Categoria>
+                        <div key={gasto.id}>
+                            {!fechaEsIgual(gastos, index, gasto) && <Fecha>{formatearFecha(gasto.fecha)}</Fecha>}
+                            <ElementoLista>
+                                <Categoria>
+                                    <IconoCategoria id={gasto.categoria}/>
+                                    {gasto.categoria}
+                                </Categoria>
 
-                            <Descripcion>
-                                {gasto.descripcion}
-                            </Descripcion>
+                                <Descripcion>
+                                    {gasto.descripcion}
+                                </Descripcion>
 
-                            <Valor>
-                                {convertirAMoneda(gasto.cantidad)}
-                            </Valor>
+                                <Valor>
+                                    {convertirAMoneda(gasto.cantidad)}
+                                </Valor>
 
-                            <ContenedorBotones>
-                                <BotonAccion as={Link} to={`/editar/${gasto.id}`}>
-                                    <IconoEditar />
-                                </BotonAccion>
-                                <BotonAccion >
-                                    <IconoBorrar />
-                                </BotonAccion>
-                            </ContenedorBotones>
-                        </ElementoLista>
+                                <ContenedorBotones>
+                                    <BotonAccion as={Link} to={`/editar/${gasto.id}`}>
+                                        <IconoEditar />
+                                    </BotonAccion>
+                                    <BotonAccion >
+                                        <IconoBorrar />
+                                    </BotonAccion>
+                                </ContenedorBotones>
+                            </ElementoLista>
+                        </div>
+                        
                     );
                 })}
 
