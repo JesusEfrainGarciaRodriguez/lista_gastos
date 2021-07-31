@@ -18,8 +18,6 @@ import BtnRegresar from '../elementos/BtnRegresar';
 import IconoCategoria from '../elementos/IconoCategoria';
 import { Lista,
     ElementoLista,
-    ListaDeCategorias,
-    ElementoListaCategorias,
     Categoria,
     Descripcion,
     Valor,
@@ -40,12 +38,14 @@ import { ReactComponent as IconoEditar } from '../img/editar.svg';
 import { ReactComponent as IconoBorrar } from '../img/borrar.svg';
 
 const ListaDeGastos = () => {
-    const gastos = useObtenerGastos();
+    const [gastos, obtenerMasGastos, hayMasPorCargar] = useObtenerGastos();
 
+    // Cambiar fecha de formato unix a personalizada 
     const formatearFecha = (fecha) => {
         return format(fromUnixTime(fecha), "dd 'de' MMMM 'de' yyyy", {locale: es});
     }
 
+    // Comparar si el gasto actual y el anterior tienen la misma fecha
     const fechaEsIgual = (gastos, index, gasto) => {
         if(index !== 0) {
             const fechaActual = formatearFecha(gasto.fecha);
@@ -99,9 +99,11 @@ const ListaDeGastos = () => {
                     );
                 })}
 
-                <ContenedorBotonCentral>
-                    <BotonCargarMas>Cargar Más</BotonCargarMas>
-                </ContenedorBotonCentral>
+                {hayMasPorCargar && 
+                    <ContenedorBotonCentral>
+                        <BotonCargarMas onClick={() => obtenerMasGastos()}>Cargar Más</BotonCargarMas>
+                    </ContenedorBotonCentral>
+                }
 
                 {gastos.length === 0 && 
                     <ContenedorSubtitulo>
