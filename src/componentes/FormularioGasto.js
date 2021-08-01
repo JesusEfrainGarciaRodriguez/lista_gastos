@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 
 // Elementos
 import {ContenedorFiltros, Formulario, Input, InputGrande, ContenedorBoton} from '../elementos/ElementosDeFormulario';
@@ -13,12 +14,14 @@ import { ReactComponent as IconoPlus } from '../img/plus.svg';
 // firebase
 import { useAuth } from '../contextos/AuthContext';
 import agregarGasto from '../firebase/agregarGasto';
+import editarGasto from '../firebase/editarGasto';
 
 // date-fns
 import getUnixTime from 'date-fns/getUnixTime';
 import fromUnixTime from 'date-fns/fromUnixTime';
 
-const FormularioGasto = () => {
+const FormularioGasto = ({ gasto }) => {
+    const history = useHistory();
     const [inputDescripcion, setInputDescripcion] = useState('');
     const [inputCantidad, setInputCantidad] = useState('');
     const [categoria, setCategoria] = useState('hogar');
@@ -27,7 +30,26 @@ const FormularioGasto = () => {
     const [alerta, setAlerta] = useState({});
     const { usuario } = useAuth();
 
-    const HandleChange = (e) => {
+    useEffect(() => {
+        // Comprobamos si ya hay algun gasto
+        // De ser asi establecemos todo el state con los valores del gasto
+        if(gasto) {
+            // Comprobamos que el gasto sea del usuario actual
+            // Para eso comprobamos el uid guardado en el gasto con el uid del usuario
+            if (gasto.data().uidUsuario === usuario.uid) {
+                setInputDescripcion(gasto.data().descripcion);
+                setInputCantidad(gasto.data().cantidad);
+                setCategoria(gasto.data().categoria);
+                setFecha(fromUnixTime(gasto.data().fecha));
+            } 
+            else {
+                history.push('/lista');
+            }
+        }
+
+    }, [gasto, usuario, history]);
+
+    const handleChange = (e) => {
         e.preventDefault();
 
         if( e.target.name === 'descripcion' ){
@@ -48,33 +70,56 @@ const FormularioGasto = () => {
         if(inputDescripcion !== '' && inputCantidad !== '') {
             // Comprobamos que sea numero
             if(cantidad) {
-                agregarGasto({
-                    descripcion: inputDescripcion,
-                    cantidad: cantidad,
-                    categoria: categoria,
-                    // Transformar fecha a formato unix
-                    fecha: getUnixTime(fecha),
-                    uidUsuario: usuario.uid
-                })
-                .then(() => {
-                    // Limpiar inputs
-                    setCategoria('hogar');
-                    setFecha(new Date());
-                    setInputDescripcion('');
-                    setInputCantidad('');
-                    setEstadoAlerta(true);
-                    setAlerta({
-                        tipo: 'exito',
-                        mensaje: 'El gasto fue agregado correctamente.'
+                // Comprobamos si vamos a editar o agregar verificando si existe un gasto
+                if(gasto) {
+                    editarGasto({
+                        id: gasto.id,
+                        descripcion: inputDescripcion,
+                        cantidad: cantidad,
+                        categoria: categoria,
+                        // Transformar fecha a formato unix
+                        fecha: getUnixTime(fecha),
+                    })
+                    .then(() => {
+                        history.push('/lista');
+                    })
+                    .catch((error) => {
+                        setEstadoAlerta(true);
+                        setAlerta({
+                            tipo: 'error',
+                            mensaje: 'Hubo un problema al intentar editar el gasto.'
+                        });
                     });
-                })
-                .catch((error) => {
-                    setEstadoAlerta(true);
-                    setAlerta({
-                        tipo: 'error',
-                        mensaje: 'Hubo un problema al intentar agregar el gasto.'
+                } 
+                else {
+                    agregarGasto({
+                        descripcion: inputDescripcion,
+                        cantidad: cantidad,
+                        categoria: categoria,
+                        // Transformar fecha a formato unix
+                        fecha: getUnixTime(fecha),
+                        uidUsuario: usuario.uid
+                    })
+                    .then(() => {
+                        // Limpiar inputs
+                        setCategoria('hogar');
+                        setFecha(new Date());
+                        setInputDescripcion('');
+                        setInputCantidad('');
+                        setEstadoAlerta(true);
+                        setAlerta({
+                            tipo: 'exito',
+                            mensaje: 'El gasto fue agregado correctamente.'
+                        });
+                    })
+                    .catch((error) => {
+                        setEstadoAlerta(true);
+                        setAlerta({
+                            tipo: 'error',
+                            mensaje: 'Hubo un problema al intentar agregar el gasto.'
+                        });
                     });
-                });
+                }
             }
             else {
                 setEstadoAlerta(true);
@@ -113,7 +158,7 @@ const FormularioGasto = () => {
                     id="descripcion"
                     placeholder="Descripción"
                     value={inputDescripcion}
-                    onChange={HandleChange}
+                    onChange={handleChange}
                 />
                 <InputGrande 
                     type="text"
@@ -121,12 +166,12 @@ const FormularioGasto = () => {
                     id="cantidad"
                     placeholder="$0.00"
                     value={inputCantidad}
-                    onChange={HandleChange}
+                    onChange={handleChange}
                 />
             </div>
             <ContenedorBoton>
                 <Boton as="button" type="submit" primario conIcono>
-                    Agregar Gasto
+                    {gasto ? "Editar Gasto" : "Agregar Gasto"}
                     <IconoPlus />
                 </Boton>
             </ContenedorBoton>
