@@ -5,6 +5,8 @@ import theme from '../theme';
 // Funcion
 import convertirAMoneda from '../funciones/convertirAMoneda';
 
+import { useTotalDelMes } from '../contextos/TotalGastadoEnElMesContext';
+
 const BarraTotal = styled.div`
     background: ${theme.verde};
     font-size: 1.25rem; /* 20px */
@@ -24,10 +26,11 @@ const BarraTotal = styled.div`
 `;
 
 const BarraTotalGastado = () => {
+    const { total } = useTotalDelMes();
     return (
         <BarraTotal>
             <p>Total Gastado en el mes:</p>
-            <p>{convertirAMoneda(0)}</p>
+            <p>{convertirAMoneda(total)}</p>
         </BarraTotal>
     );
 }

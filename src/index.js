@@ -10,6 +10,7 @@ import {Helmet} from "react-helmet";
 
 // Contextos
 import { AuthProvider } from './contextos/AuthContext';
+import { TotalGastadoProvider } from './contextos/TotalGastadoEnElMesContext';
 
 // Elementos
 import Contenedor from './elementos/Contenedor';
@@ -40,18 +41,20 @@ const Index = () => {
       </Helmet>
 
       <AuthProvider>
-        <BrowserRouter>
-          <Contenedor>
-            <Switch>
-              <Route path="/iniciar-sesion" component={InicioSesion}/>
-              <Route path="/crear-cuenta" component={RegistroUsuarios}/>
-              <RutaPrivada path="/categorias"> <GastosPorCategoria /></RutaPrivada>
-              <RutaPrivada path="/lista"> <ListaDeGastos /> </RutaPrivada>
-              <RutaPrivada path="/editar/:id"> <EditarGasto /> </RutaPrivada>
-              <RutaPrivada path="/"> <App /> </RutaPrivada>
-            </Switch>
-          </Contenedor>
-        </BrowserRouter>
+        <TotalGastadoProvider>
+          <BrowserRouter>
+            <Contenedor>
+              <Switch>
+                <Route path="/iniciar-sesion" component={InicioSesion}/>
+                <Route path="/crear-cuenta" component={RegistroUsuarios}/>
+                <RutaPrivada path="/categorias"> <GastosPorCategoria /></RutaPrivada>
+                <RutaPrivada path="/lista"> <ListaDeGastos /> </RutaPrivada>
+                <RutaPrivada path="/editar/:id"> <EditarGasto /> </RutaPrivada>
+                <RutaPrivada path="/"> <App /> </RutaPrivada>
+              </Switch>
+            </Contenedor>
+          </BrowserRouter>
+        </TotalGastadoProvider>
       </AuthProvider>
       
     </>
