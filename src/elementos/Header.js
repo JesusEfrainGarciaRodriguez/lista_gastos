@@ -9,6 +9,7 @@ const Header = styled.div`
  
     @media(max-width: 60rem){ /* 950px */
         justify-content: start;
+        padding: 1rem;
     }
 `;
  
@@ -44,6 +45,11 @@ const ContenedorBotones = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    
+    @media(max-width: 60rem){ /* 950px */
+        gap: 0.5rem;
+    }
 `;
 
 export {Header, Titulo, ContenedorHeader, ContenedorBotones};

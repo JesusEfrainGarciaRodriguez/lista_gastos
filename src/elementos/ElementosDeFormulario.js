@@ -34,6 +34,7 @@ const Formulario = styled.form`
  
     @media(max-width: 60rem){ /* 950px */
         justify-content: start;
+        padding: 0 1rem;
     }
 `;
  

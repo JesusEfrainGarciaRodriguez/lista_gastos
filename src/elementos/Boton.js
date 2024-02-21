@@ -30,6 +30,10 @@ const Boton = styled(Link)`
         background: ${(props) => props.primario ? '#4c5cf0' : '#2c80b5'};
         transform: scale(1.03);
     }
+
+    @media(max-width: 768px) {
+        margin-left: 0;
+    }
 `;
 
 export default Boton;
