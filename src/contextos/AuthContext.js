@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { auth } from '../firebase/firebaseConfig';
+import { onAuthStateChanged } from "firebase/auth";
 
 // Creación del contexto
 const AuthContext = React.createContext();
@@ -18,7 +19,7 @@ const AuthProvider = ({children}) => {
     // Efecto para ejecutar la comprobación una sola vez
     useEffect(() => {
         // Comprobamos si hay un usuario
-        const cancelarSuscripcion = auth.onAuthStateChanged((usuario) => {
+        const cancelarSuscripcion = onAuthStateChanged(auth, (usuario) => {
             setUsuario(usuario);
             setCargando(false);
         });

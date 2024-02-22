@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import { auth } from '../firebase/firebaseConfig';
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from 'react-router';
 
 // Componentes
@@ -79,7 +80,7 @@ const RegistroUsuarios = () => {
         
         // Registrar usuario en firebase
         try {
-            await auth.createUserWithEmailAndPassword(correo, password);
+            await createUserWithEmailAndPassword(auth, correo, password);
             navigate('/');
         }
         catch (error) {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { db } from '../firebase/firebaseConfig';
 import { useAuth } from '../contextos/AuthContext';
+import { collection, onSnapshot, query, orderBy, where, limit, startAfter } from "firebase/firestore";
 
 const useObtenerGastos = () => {
     const { usuario } = useAuth();
@@ -9,12 +10,15 @@ const useObtenerGastos = () => {
     const [hayMasPorCargar, setHayMasPorCargar] = useState(false);
 
     const obtenerMasGastos = () => {
-        db.collection('gastos')
-        .where('uidUsuario', '==', usuario.uid)
-        .orderBy('fecha', 'desc')
-        .limit(10)
-        .startAfter(ultimoGasto)
-        .onSnapshot((snapshot) => {
+        const consulta = query(
+            collection(db, 'gastos'),
+            where('uidUsuario', '==', usuario.uid),
+            orderBy('fecha', 'desc'),
+            limit(10),
+            startAfter(ultimoGasto)
+        );
+
+        onSnapshot(consulta, (snapshot) => {
             // Comprobar si existen gastos
             if(snapshot.docs.length > 0){
                 // Guardar lugar del ultimo gasto cargado
@@ -33,11 +37,14 @@ const useObtenerGastos = () => {
 
     // Cargar los primeros gastos con limite de 10
     useEffect(() => {
-        const unsuscribe = db.collection('gastos')
-        .where('uidUsuario', '==', usuario.uid)
-        .orderBy('fecha', 'desc')
-        .limit(10)
-        .onSnapshot((snapshot) => {
+        const consulta = query(
+            collection(db, 'gastos'),
+            where('uidUsuario', '==', usuario.uid),
+            orderBy('fecha', 'desc'),
+            limit(10)
+        );
+
+        const unsuscribe = onSnapshot(consulta, (snapshot) => {
             // Comprobar si existen gastos
             if(snapshot.docs.length > 0){
                 // Guardar lugar del ultimo gasto cargado

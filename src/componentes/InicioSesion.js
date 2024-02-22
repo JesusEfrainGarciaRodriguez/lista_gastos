@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/firebaseConfig';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 // Componenetes
 import { Header, Titulo, ContenedorHeader } from './../elementos/Header';
@@ -58,7 +59,7 @@ const InicioSesion = () => {
         
         // Iniciar sesión en firebase
         try {
-            await auth.signInWithEmailAndPassword(correo, password);
+            await signInWithEmailAndPassword(auth, correo, password);
             navigate('/');
         }
         catch (error) {

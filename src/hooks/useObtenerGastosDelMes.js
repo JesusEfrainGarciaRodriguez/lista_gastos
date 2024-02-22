@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { db } from "../firebase/firebaseConfig";
 import { startOfMonth, endOfMonth, getUnixTime } from "date-fns";
 import { useAuth } from '../contextos/AuthContext';
+import { collection, query, orderBy, where, onSnapshot } from "firebase/firestore";
 
 const useObtenerGastosDelMes = () => {
     const { usuario } = useAuth();
@@ -14,12 +15,15 @@ const useObtenerGastosDelMes = () => {
 
         if(usuario) {
             // Obtiene los gastos del mes
-            const unsuscribe = db.collection('gastos')
-            .orderBy('fecha', 'desc')
-            .where('fecha', '>=', inicioDeMes)
-            .where('fecha', '<=', finDeMes)
-            .where('uidUsuario', '==', usuario.uid)
-            .onSnapshot((snapshot) => {
+            const consulta = query(
+                collection(db, 'gastos'),
+                orderBy('fecha', 'desc'),
+                where('fecha', '>=', inicioDeMes),
+                where('fecha', '<=', finDeMes),
+                where('uidUsuario', '==', usuario.uid)
+            );
+
+            const unsuscribe = onSnapshot(consulta, (snapshot) => {
                 setGastos(snapshot.docs.map((documento) => {
                     return {...documento.data(), id: documento.id};
                 }));

@@ -1,7 +1,9 @@
-import { db } from "./firebaseConfig"
+import { db } from "./firebaseConfig";
+import { doc, updateDoc } from 'firebase/firestore';
 
-const editarGasto = ({ id, descripcion, cantidad, categoria, fecha }) => {
-    return db.collection('gastos').doc(id).update({
+const editarGasto = async ({ id, descripcion, cantidad, categoria, fecha }) => {
+    const documento = doc(db, 'gastos', id);
+    return await updateDoc(documento, {
         descripcion: descripcion,
         cantidad: Number(cantidad),
         categoria: categoria,
