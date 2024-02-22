@@ -1,8 +1,8 @@
 import { db } from './firebaseConfig';
-import { doc, addDoc } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
 
-const agregarGasto = async ({ descripcion, cantidad, categoria, fecha, uidUsuario }) => {
-    return await addDoc(doc(db, 'gastos'), {
+const agregarGasto = ({ descripcion, cantidad, categoria, fecha, uidUsuario }) => {
+    return addDoc(collection(db, 'gastos'), {
         descripcion: descripcion,
         cantidad: Number(cantidad),
         categoria: categoria,
