@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 
 // Elementos
 import {ContenedorFiltros, Formulario, Input, InputGrande, ContenedorBoton} from '../elementos/ElementosDeFormulario';
@@ -21,7 +21,7 @@ import getUnixTime from 'date-fns/getUnixTime';
 import fromUnixTime from 'date-fns/fromUnixTime';
 
 const FormularioGasto = ({ gasto }) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const [inputDescripcion, setInputDescripcion] = useState('');
     const [inputCantidad, setInputCantidad] = useState('');
     const [categoria, setCategoria] = useState('hogar');
@@ -43,11 +43,11 @@ const FormularioGasto = ({ gasto }) => {
                 setFecha(fromUnixTime(gasto.data().fecha));
             } 
             else {
-                history.push('/lista');
+                navigate('/lista');
             }
         }
 
-    }, [gasto, usuario, history]);
+    }, [gasto, usuario, navigate]);
 
     const handleChange = (e) => {
         e.preventDefault();
@@ -81,7 +81,7 @@ const FormularioGasto = ({ gasto }) => {
                         fecha: getUnixTime(fecha),
                     })
                     .then(() => {
-                        history.push('/lista');
+                        navigate('/lista');
                     })
                     .catch((error) => {
                         setEstadoAlerta(true);

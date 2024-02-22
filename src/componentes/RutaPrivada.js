@@ -1,15 +1,15 @@
 import React from 'react';
 import { useAuth } from '../contextos/AuthContext';
-import { Route, Redirect } from 'react-router';
+import { Navigate } from 'react-router';
 
-const RutaPrivada = ({children, ...restoDePropiedades}) => {
+const RutaPrivada = ({children}) => {
     const { usuario } = useAuth();
 
     if(usuario) {
-        return <Route {...restoDePropiedades}>{children}</Route>;
+        return children;
     }
     else {
-        return <Redirect to="/iniciar-sesion" />;
+        return <Navigate to="/iniciar-sesion" />;
     }
 }
  

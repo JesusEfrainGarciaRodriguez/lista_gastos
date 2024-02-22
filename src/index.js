@@ -5,7 +5,7 @@ import App from './App';
 
 // Librerias
 import WebFont from 'webfontloader';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import {Helmet} from "react-helmet";
 
 // Contextos
@@ -44,14 +44,14 @@ const Index = () => {
         <TotalGastadoProvider>
           <BrowserRouter>
             <Contenedor>
-              <Switch>
-                <Route path="/iniciar-sesion" component={InicioSesion}/>
-                <Route path="/crear-cuenta" component={RegistroUsuarios}/>
-                <RutaPrivada path="/categorias"> <GastosPorCategoria /></RutaPrivada>
-                <RutaPrivada path="/lista"> <ListaDeGastos /> </RutaPrivada>
-                <RutaPrivada path="/editar/:id"> <EditarGasto /> </RutaPrivada>
-                <RutaPrivada path="/"> <App /> </RutaPrivada>
-              </Switch>
+              <Routes>
+                <Route path="/iniciar-sesion" element={<InicioSesion />}/>
+                <Route path="/crear-cuenta" element={<RegistroUsuarios />}/>
+                <Route path="/categorias" element={<RutaPrivada><GastosPorCategoria /></RutaPrivada>}/>
+                <Route path="/lista" element={<RutaPrivada><ListaDeGastos /></RutaPrivada>}/>
+                <Route path="/editar/:id" element={<RutaPrivada><EditarGasto /></RutaPrivada>}/>
+                <Route path="/" element={<RutaPrivada><App /></RutaPrivada>}/>
+              </Routes>
             </Contenedor>
           </BrowserRouter>
         </TotalGastadoProvider>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ReactComponent as IconoCerrarSesion } from '../img/log-out.svg';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/firebaseConfig';
 
 // Elementos
@@ -8,12 +8,12 @@ import Boton from './Boton';
 
 
 const BotonCerrarSesion = () => {
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const cerrarSesion = async () => {
         try{
             await auth.signOut();
-            history.push('/iniciar-sesion');
+            navigate('/iniciar-sesion');
         }
         catch(error) {
             console.log(error);

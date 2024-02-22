@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import { auth } from '../firebase/firebaseConfig';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 
 // Componentes
 import { Header, Titulo, ContenedorHeader } from './../elementos/Header';
@@ -20,7 +20,7 @@ const Svg = styled(SvgLogin)`
 `;
 
 const RegistroUsuarios = () => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const [correo, setCorreo] = useState("");
     const [password, setPassword] = useState("");
     const [password2, setPassword2] = useState("");
@@ -80,7 +80,7 @@ const RegistroUsuarios = () => {
         // Registrar usuario en firebase
         try {
             await auth.createUserWithEmailAndPassword(correo, password);
-            history.push('/');
+            navigate('/');
         }
         catch (error) {
             let mensaje;

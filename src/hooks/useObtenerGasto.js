@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { db } from "../firebase/firebaseConfig";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 
 const useObtenerGasto = (id) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const [gasto, setGasto] = useState('');
 
     useEffect(() => {
@@ -13,10 +13,10 @@ const useObtenerGasto = (id) => {
                 setGasto(doc);
             }
             else {
-                history.push('/lista');
+                navigate('/lista');
             }
         })
-    }, [history, id])
+    }, [navigate, id])
 
     return [gasto];
 }

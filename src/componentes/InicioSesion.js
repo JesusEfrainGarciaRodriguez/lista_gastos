@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/firebaseConfig';
 
 // Componenetes
@@ -20,7 +20,7 @@ const Svg = styled(SvgLogin)`
 `;
 
 const InicioSesion = () => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const [correo, setCorreo] = useState("");
     const [password, setPassword] = useState("");
     const [estadoAlerta, setEstadoAlerta] = useState(false);
@@ -59,7 +59,7 @@ const InicioSesion = () => {
         // Iniciar sesión en firebase
         try {
             await auth.signInWithEmailAndPassword(correo, password);
-            history.push('/');
+            navigate('/');
         }
         catch (error) {
             let mensaje;

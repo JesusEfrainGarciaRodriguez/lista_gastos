@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { ReactComponent as IconoFlecha } from '../img/flecha.svg';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 
 const Btn = styled.button`
     display: block;
@@ -33,10 +33,10 @@ const Icono = styled(IconoFlecha)`
 `;
 
 const BtnRegresar = ({ruta = '/'}) => {
-    const history = useHistory();
+    const navigate = useNavigate();
 
     return (
-        <Btn onClick={() => history.push(ruta)}>
+        <Btn onClick={() => navigate(ruta)}>
             <Icono/>
         </Btn>
     );
