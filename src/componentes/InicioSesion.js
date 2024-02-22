@@ -94,7 +94,7 @@ const InicioSesion = () => {
                 <ContenedorHeader>
                     <Titulo>Iniciar de Sesión</Titulo>
                     <div>
-                        <Boton to="crear-cuenta">Crear Cuenta</Boton>
+                        <Boton to="/crear-cuenta">Crear Cuenta</Boton>
                     </div>
                 </ContenedorHeader>
             </Header>
